@@ -4,7 +4,7 @@
 #include "ServerDiscovery.hpp"
 #include "LocalClient.hpp"
 
-MainWindow::MainWindow(QWidget *parent) :
+GomokuWindow::GomokuWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_client(new LocalClient(this))
@@ -44,18 +44,18 @@ MainWindow::MainWindow(QWidget *parent) :
     m_serverDiscovery->discoveryServer();
 }
 
-MainWindow::~MainWindow()
+GomokuWindow::~GomokuWindow()
 {
     delete ui;
 }
 
-void MainWindow::connectToServer()
+void GomokuWindow::connectToServer()
 {
     m_client->connectToServer(ui->serverListAddress->text(),
                               ui->serverListPort->value());
 }
 
-void MainWindow::addContact(QString name)
+void GomokuWindow::addContact(QString name)
 {
     for(int i=0;i<ui->contacts->count();i++){
         QListWidgetItem *item = ui->contacts->item(i);
@@ -66,7 +66,7 @@ void MainWindow::addContact(QString name)
     ui->contacts->addItem(name);
 }
 
-void MainWindow::addMessage(QString name, QString text)
+void GomokuWindow::addMessage(QString name, QString text)
 {
     if (text.startsWith("/me ")){
         ui->messages->setFontItalic(true);
@@ -77,7 +77,7 @@ void MainWindow::addMessage(QString name, QString text)
     ui->messages->append(name+":"+text+"\n");
 }
 
-void MainWindow::addServer(QString address, quint16 port)
+void GomokuWindow::addServer(QString address, quint16 port)
 {
     QString text = address+":"+QString::number(port);
     for(int i=0;i<ui->serverListList->count();i++){
@@ -89,51 +89,51 @@ void MainWindow::addServer(QString address, quint16 port)
     ui->serverListList->addItem(text);
 }
 
-void MainWindow::addServerToDiscovery(quint16 port)
+void GomokuWindow::addServerToDiscovery(quint16 port)
 {
     m_serverDiscovery->addServer(port);
 }
 
-void MainWindow::createServer()
+void GomokuWindow::createServer()
 {
     m_server->startServer(ui->serverPort->value());
     ui->createServer->setDisabled(true);
 }
 
-void MainWindow::participantsOnReceived(const QList<int> &ids, const QStringList &names)
+void GomokuWindow::participantsOnReceived(const QList<int> &ids, const QStringList &names)
 {
     ui->contacts->clear();
     ui->contacts->addItems(names);
 }
 
-void MainWindow::onServerMessageReceived(QString from, QString message)
+void GomokuWindow::onServerMessageReceived(QString from, QString message)
 {
     ui->serverLog->insertPlainText(from + ":" + message + "\n");
 }
 
-void MainWindow::on_serverListConnectButton_clicked()
+void GomokuWindow::on_serverListConnectButton_clicked()
 {
     connectToServer();
 }
 
-void MainWindow::on_serverListList_itemDoubleClicked(QListWidgetItem *item)
+void GomokuWindow::on_serverListList_itemDoubleClicked(QListWidgetItem *item)
 {
     connectToServer();
 }
 
-void MainWindow::on_serverListList_itemClicked(QListWidgetItem *item)
+void GomokuWindow::on_serverListList_itemClicked(QListWidgetItem *item)
 {
     ui->serverListAddress->setText(item->text().section(':',-2,-2));
     ui->serverListPort->setValue(item->text().section(':',-1).toInt());
 }
 
-void MainWindow::on_serverListRefreshButton_clicked()
+void GomokuWindow::on_serverListRefreshButton_clicked()
 {
     ui->serverListList->clear();
     m_serverDiscovery->discoveryServer();
 }
 
-void MainWindow::sendMessage()
+void GomokuWindow::sendMessage()
 {
     QString text = ui->message->text();
     ui->message->clear();
@@ -144,13 +144,13 @@ void MainWindow::sendMessage()
     }
 }
 
-void MainWindow::onClientConnected()
+void GomokuWindow::onClientConnected()
 {
     ui->tabWidget->setCurrentIndex(1);
     ui->messages->append("You connected to server \n");
 }
 
-void MainWindow::on_contacts_customContextMenuRequested(const QPoint &pos)
+void GomokuWindow::on_contacts_customContextMenuRequested(const QPoint &pos)
 {
     QMenu menu;
     menu.exec(ui->contacts->mapToGlobal(pos));

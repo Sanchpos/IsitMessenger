@@ -13,13 +13,13 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class GomokuWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit GomokuWindow(QWidget *parent = 0);
+    ~GomokuWindow();
 
      void connectToServer();
 
